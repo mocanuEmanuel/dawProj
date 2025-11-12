@@ -15,7 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ':e' => $email,
             ':p' => $password_hash
         ]);
-        echo "<p>Signup successful!</p>";
+        header("Location: index.html");
+        exit;
+
     } catch (PDOException $e) {
         if (str_contains($e->getMessage(), 'UNIQUE')) {
             echo "<p style='color:red;'>Email already registered.</p>";
