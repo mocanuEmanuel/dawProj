@@ -2,7 +2,9 @@
 // seed_books.php
 // Seeds booklog.db with enriched book, author, and genre data from Open Library.
 
-require_once "db_connect.php";
+require_once __DIR__ . '/app/Config/Database.php';
+
+use App\Config\Database;
 
 /**
  * Fetch book metadata from Open Library API by title.
@@ -191,6 +193,8 @@ function getAuthorFullDetails($authorKey, $authorName)
 // --------------------------------------------------
 // Main Script
 // --------------------------------------------------
+$pdo = Database::getInstance()->getConnection();
+
 echo "<pre>";
 
 $bookList = getPopularBooks(50);
@@ -256,4 +260,3 @@ foreach ($bookList as $title) {
 
 echo "\n✅ Seeding complete.\n";
 echo "</pre>";
-?>

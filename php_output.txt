@@ -1,0 +1,6 @@
+PHP Version: 8.4.15
+PDO Installed: No
+PDO SQLite Installed: No
+SQLite3 Installed: No
+Curl Installed: Yes
+INI File: /etc/php.ini
