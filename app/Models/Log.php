@@ -3,7 +3,12 @@ namespace App\Models;
 
 use PDO;
 
-class Log extends Model {
+use App\Interfaces\LoggableInterface;
+
+class Log extends Model implements LoggableInterface {
+    public function log(string $message): void {
+        error_log("LOG MODEL: " . $message);
+    }
     public function createOrUpdate($userId, $bookId, $status) {
         // Check if exists
         $stmt = $this->pdo->prepare("SELECT id FROM logs WHERE user_id = :uid AND book_id = :bid");
@@ -36,5 +41,9 @@ class Log extends Model {
         ");
         $stmt->execute([':uid' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function delete($userId, $bookId) {
+        $stmt = $this->pdo->prepare("DELETE FROM logs WHERE user_id = :uid AND book_id = :bid");
+        return $stmt->execute([':uid' => $userId, ':bid' => $bookId]);
     }
 }

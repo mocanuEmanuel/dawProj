@@ -1,0 +1,10 @@
+<?php
+namespace App\Exceptions;
+
+use Exception;
+
+class ValidationException extends Exception {
+    public function __construct($message = "Validation Error", $code = 400, Exception $previous = null) {
+        parent::__construct($message, $code, $previous);
+    }
+}

@@ -1,26 +1,10 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-header {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 1rem;
-}
+/* Header and Footer visuals moved to theme.css */
 
 main {
     flex: 1;
@@ -28,28 +12,29 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
-    box-sizing: border-box;
 }
 
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
+/* Utility classes for layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+.grid {
+    display: grid;
+    gap: 20px;
 }
 
-th, td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: left;
+.flex {
+    display: flex;
+    gap: 20px;
 }
 
-th {
-    background-color: #f4f4f4;
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
 }

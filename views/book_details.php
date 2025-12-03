@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
 
 <div class="book-details-container">
     <div class="book-poster">
@@ -10,7 +10,7 @@
     </div>
 
     <div class="book-info">
-        <h1><?= htmlspecialchars($book['title']) ?> <span style="font-weight: normal; color: #89a;">(<?= $book['publication_year'] ?>)</span></h1>
+        <h1><?= htmlspecialchars($book['title']) ?> <span class="publication-year">(<?= $book['publication_year'] ?>)</span></h1>
         <h3>by <?= htmlspecialchars($book['author']) ?></h3>
         
         <p><?= htmlspecialchars($book['description']) ?></p>
@@ -20,13 +20,13 @@
             <form action="/log" method="POST">
                 <input type="hidden" name="book_id" value="<?= $book['id'] ?>">
                 <label>Status: 
-                    <select name="status">
+                    <select name="status" class="form-control">
                         <option value="planned" <?= ($userLog['status'] ?? '') == 'planned' ? 'selected' : '' ?>>Planned</option>
                         <option value="reading" <?= ($userLog['status'] ?? '') == 'reading' ? 'selected' : '' ?>>Reading</option>
                         <option value="completed" <?= ($userLog['status'] ?? '') == 'completed' ? 'selected' : '' ?>>Completed</option>
                     </select>
                 </label>
-                <button type="submit">Update</button>
+                <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>
 
@@ -35,12 +35,12 @@
             <form action="/review" method="POST">
                 <input type="hidden" name="book_id" value="<?= $book['id'] ?>">
                 <label>Rating: 
-                    <input type="number" name="rating" min="1" max="5" value="5" style="width: 50px;">
+                    <input type="number" name="rating" min="1" max="5" value="5" class="rating-input">
                 </label>
                 <br><br>
-                <textarea name="review_text" rows="4" style="width: 100%;" placeholder="Write your review..."></textarea>
+                <textarea name="review_text" rows="4" class="form-control" placeholder="Write your review..."></textarea>
                 <br><br>
-                <button type="submit">Post Review</button>
+                <button type="submit" class="btn btn-primary">Post Review</button>
             </form>
         </div>
 
@@ -54,7 +54,7 @@
                         <p>
                             <strong><?= htmlspecialchars($review['username']) ?></strong> 
                             <span class="rating-stars"><?= str_repeat('★', $review['rating']) ?></span>
-                            <span style="color: #678; font-size: 0.8em;"><?= $review['created_at'] ?></span>
+                            <span class="review-date"><?= $review['created_at'] ?></span>
                         </p>
                         <p><?= nl2br(htmlspecialchars($review['review_text'])) ?></p>
                     </div>
@@ -64,4 +64,24 @@
     </div>
 </div>
 
-<?php include 'footer.php'; ?>
+<style>
+    .book-details-container { display: flex; gap: 40px; margin-top: 20px; }
+    .book-poster { flex: 0 0 300px; }
+    .book-cover { width: 100%; border-radius: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .book-info { flex: 1; }
+    .publication-year { font-weight: normal; color: var(--color-text-muted); }
+    .actions-panel { background: var(--color-surface); padding: 20px; margin-bottom: 20px; border: 1px solid var(--color-border); }
+    .actions-panel h4 { margin-top: 0; }
+    .rating-input { width: 60px; padding: 5px; }
+    .reviews-section { margin-top: 40px; }
+    .review-card { background: var(--color-surface); padding: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--color-border); }
+    .rating-stars { color: #FFD700; margin-left: 10px; }
+    .review-date { color: var(--color-text-muted); font-size: 0.8em; margin-left: 10px; }
+    
+    @media (max-width: 768px) {
+        .book-details-container { flex-direction: column; }
+        .book-poster { flex: 0 0 auto; width: 100%; max-width: 300px; margin: 0 auto; }
+    }
+</style>
+
+<?php include __DIR__ . '/footer.php'; ?>

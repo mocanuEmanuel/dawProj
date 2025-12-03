@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLog</title>
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+    <header>
+        <h1>BookLog</h1>
+            </header>
+    <main>
+
+<div class="login-container">
+    <h2>Login</h2>
+        <form action="/login" method="POST">
+        <input type="hidden" name="csrf_token" value="16c966e1943bca6918a2212b3f478a510d14f0f0d718b377a6d279fc608d5a7b">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+</div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 BookLog</p>
+    </footer>
+    <script src="/js/carousel.js"></script>
+</body>
+</html>

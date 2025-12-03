@@ -9,7 +9,7 @@ class Database {
     private $pdo;
 
     private function __construct() {
-        $db_file = __DIR__ . "/../../booklog.db"; // Adjust path as needed relative to app/Config
+        $db_file = __DIR__ . "/../../booklog.db";
 
         try {
             $this->pdo = new PDO("sqlite:" . $db_file);

@@ -10,7 +10,6 @@ $username = "jerry";
 $email = "jerry@example.com";
 $password = "password";
 
-// Check if exists
 $existing = $userModel->findByEmail($email);
 if ($existing) {
     echo "User '$username' already exists.\n";

@@ -9,7 +9,6 @@ echo "Running UserTest...\n";
 
 $userModel = new User();
 
-// Test Create
 $username = "testuser_" . time();
 $email = "test_" . time() . "@example.com";
 $password = "password123";
@@ -21,7 +20,6 @@ if ($userModel->create($username, $email, $password)) {
     echo "FAIL\n";
 }
 
-// Test Find
 echo "Testing find user by email... ";
 $user = $userModel->findByEmail($email);
 if ($user && $user['username'] === $username) {
@@ -30,7 +28,6 @@ if ($user && $user['username'] === $username) {
     echo "FAIL\n";
 }
 
-// Test Password Verify
 echo "Testing password verification... ";
 if ($userModel->verifyPassword($password, $user['password_hash'])) {
     echo "PASS\n";

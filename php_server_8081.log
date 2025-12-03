@@ -1,0 +1,4 @@
+[Wed Dec  3 12:37:17 2025] PHP 8.4.15 Development Server (http://0.0.0.0:8081) started
+[Wed Dec  3 12:37:19 2025] 127.0.0.1:55884 Accepted
+[Wed Dec  3 12:37:19 2025] 127.0.0.1:55884 [200]: GET /test.php
+[Wed Dec  3 12:37:19 2025] 127.0.0.1:55884 Closing

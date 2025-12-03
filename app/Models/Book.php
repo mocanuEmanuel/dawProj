@@ -17,7 +17,7 @@ class Book extends Model {
 
     public function getAllWithAuthors() {
         $stmt = $this->pdo->query("
-            SELECT books.title, authors.name AS author, books.publication_year
+            SELECT books.id, books.title, authors.name AS author, books.publication_year, books.cover_image
             FROM books
             JOIN authors ON books.author_id = authors.id
             ORDER BY books.title ASC
@@ -25,9 +25,8 @@ class Book extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Add other methods as needed for seeding or other functionality
-    public function create($title, $description, $year, $cover, $language, $work_id, $author_id) {
-        // Implementation for seeding if needed, or keep seeding separate
-        // For now, focusing on read operations for the dashboard
+    public function delete($id) {
+        $stmt = $this->pdo->prepare("DELETE FROM books WHERE id = :id");
+        $stmt->execute([':id' => $id]);
     }
 }

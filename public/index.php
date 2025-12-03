@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . '/../app/Config/Database.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once __DIR__ . '/../app/Interfaces/LoggableInterface.php';
 require_once __DIR__ . '/../app/Exceptions/CustomException.php';
 require_once __DIR__ . '/../app/Helpers/CSRF.php';
@@ -24,14 +27,14 @@ session_start();
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
 
-// Simple router
+
 if ($path === '/' || $path === '/index.php') {
     if (isset($_SESSION['user_id'])) {
         header("Location: /dashboard");
         exit;
     }
-    $controller = new AuthController();
-    $controller->showLoginForm();
+    header("Location: /login");
+    exit;
 } elseif ($path === '/login') {
     $controller = new AuthController();
     $controller->login();
@@ -39,9 +42,8 @@ if ($path === '/' || $path === '/index.php') {
     $controller = new AuthController();
     $controller->logout();
 } elseif ($path === '/signup') {
-    // Implement signup if needed, for now redirect to login or show signup form
-    // Assuming AuthController handles it or we reuse login view with a toggle
-    echo "Signup not implemented yet, please seed users or implement signup.";
+    $controller = new AuthController();
+    $controller->register();
 } elseif ($path === '/dashboard') {
     $controller = new BookController();
     $controller->index();
@@ -54,9 +56,21 @@ if ($path === '/' || $path === '/index.php') {
 } elseif ($path === '/my-logs') {
     $controller = new LogController();
     $controller->index();
+} elseif ($path === '/log/delete') {
+    $controller = new LogController();
+    $controller->delete();
 } elseif ($path === '/review') {
     $controller = new ReviewController();
     $controller->addReview();
+} elseif ($path === '/book/create') {
+    $controller = new BookController();
+    $controller->create();
+} elseif ($path === '/book/store') {
+    $controller = new BookController();
+    $controller->store();
+} elseif (preg_match('#^/book/delete/(\d+)$#', $path, $matches)) {
+    $controller = new BookController();
+    $controller->destroy($matches[1]);
 } else {
     http_response_code(404);
     echo "404 Not Found";

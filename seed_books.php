@@ -1,14 +1,8 @@
 <?php
-// seed_books.php
-// Seeds booklog.db with enriched book, author, and genre data from Open Library.
-
 require_once __DIR__ . '/app/Config/Database.php';
 
 use App\Config\Database;
 
-/**
- * Fetch book metadata from Open Library API by title.
- */
 function getBookMetadata($title)
 {
     $url = "https://openlibrary.org/search.json?title=" . urlencode($title) . "&limit=1";
@@ -29,9 +23,6 @@ function getBookMetadata($title)
     return $data['docs'][0] ?? null;
 }
 
-/**
- * Fetch popular book titles dynamically.
- */
 function getPopularBooks($limit = 50)
 {
     $url = "https://openlibrary.org/subjects/popular.json?limit=" . $limit;
@@ -58,9 +49,6 @@ function getPopularBooks($limit = 50)
     return $titles;
 }
 
-/**
- * Insert or retrieve an author ID.
- */
 function insertAuthor($pdo, $name, $bio = null, $birth_year = null)
 {
     $stmt = $pdo->prepare("SELECT id FROM authors WHERE name = :name");
@@ -74,9 +62,6 @@ function insertAuthor($pdo, $name, $bio = null, $birth_year = null)
     return $pdo->lastInsertId();
 }
 
-/**
- * Insert or retrieve a genre ID.
- */
 function insertGenre($pdo, $genreName)
 {
     $stmt = $pdo->prepare("SELECT id FROM genres WHERE name = :name");
@@ -90,15 +75,12 @@ function insertGenre($pdo, $genreName)
     return $pdo->lastInsertId();
 }
 
-/**
- * Insert a book record.
- */
 function insertBook($pdo, $title, $description, $year, $cover, $language, $work_id, $author_id)
 {
     $stmt = $pdo->prepare("SELECT id FROM books WHERE title = :title AND author_id = :author");
     $stmt->execute([':title' => $title, ':author' => $author_id]);
     if ($stmt->fetch(PDO::FETCH_ASSOC)) {
-        return null; // already exists
+        return null; 
     }
 
     $stmt = $pdo->prepare("
@@ -120,18 +102,12 @@ function insertBook($pdo, $title, $description, $year, $cover, $language, $work_
     return $pdo->lastInsertId();
 }
 
-/**
- * Link a book to a genre.
- */
 function linkBookGenre($pdo, $book_id, $genre_id)
 {
     $stmt = $pdo->prepare("INSERT OR IGNORE INTO book_genres (book_id, genre_id) VALUES (:b, :g)");
     $stmt->execute([':b' => $book_id, ':g' => $genre_id]);
 }
 
-/**
- * Fetch full work details to get subjects/genres.
- */
 function getWorkDetails($workKey)
 {
     $url = "https://openlibrary.org" . $workKey . ".json";
@@ -148,27 +124,21 @@ function getWorkDetails($workKey)
     return json_decode($json, true);
 }
 
-/**
- * Fetch author details for bio and birth date, with fallback to search.
- */
 function getAuthorFullDetails($authorKey, $authorName)
 {
     $bio = null;
     $birthYear = null;
 
     if ($authorKey) {
-        $authorDetails = getWorkDetails("/authors/" . $authorKey); // reuse work details function
+        $authorDetails = getWorkDetails("/authors/" . $authorKey); 
 
-        // Bio
         $bio = $authorDetails['bio'] ?? 'No bio yet';
         if (is_array($bio)) {
             $bio = $bio['value'] ?? 'No bio yet';
         }
 
-        // Birth date
         $birthDate = $authorDetails['birth_date'] ?? null;
 
-        // fallback using search endpoint if missing
         if (!$birthDate) {
             $searchUrl = "https://openlibrary.org/search/authors.json?q=" . urlencode($authorName);
             $ch = curl_init();
@@ -190,9 +160,6 @@ function getAuthorFullDetails($authorKey, $authorName)
     return [$bio, $birthYear];
 }
 
-// --------------------------------------------------
-// Main Script
-// --------------------------------------------------
 $pdo = Database::getInstance()->getConnection();
 
 echo "<pre>";
@@ -222,13 +189,11 @@ foreach ($bookList as $title) {
         continue;
     }
 
-    // Author
     $authorName = $meta['author_name'][0] ?? 'Unknown Author';
     $authorKey = $meta['author_key'][0] ?? null;
     [$authorBio, $birthYear] = getAuthorFullDetails($authorKey, $authorName);
     $author_id = insertAuthor($pdo, $authorName, $authorBio, $birthYear);
 
-    // Book metadata
     $description = $meta['first_sentence'] ?? '';
     $pubYear = $meta['first_publish_year'] ?? null;
     $cover = isset($meta['cover_i']) ? "https://covers.openlibrary.org/b/id/{$meta['cover_i']}-L.jpg" : null;
@@ -241,7 +206,6 @@ foreach ($bookList as $title) {
         continue;
     }
 
-    // Genres/subjects
     if ($workId) {
         $workDetails = getWorkDetails($workId);
         $subjects = $workDetails['subjects'] ?? [];
