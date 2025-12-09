@@ -35,7 +35,7 @@ function getPopularBooks($limit = 50)
     curl_close($ch);
 
     if (!$json) {
-        echo "⚠️ Could not load popular books from Open Library.\n";
+        echo " Could not load popular books from Open Library.\n";
         return [];
     }
 
@@ -80,7 +80,7 @@ function insertBook($pdo, $title, $description, $year, $cover, $language, $work_
     $stmt = $pdo->prepare("SELECT id FROM books WHERE title = :title AND author_id = :author");
     $stmt->execute([':title' => $title, ':author' => $author_id]);
     if ($stmt->fetch(PDO::FETCH_ASSOC)) {
-        return null; 
+        return null;
     }
 
     $stmt = $pdo->prepare("
@@ -130,7 +130,7 @@ function getAuthorFullDetails($authorKey, $authorName)
     $birthYear = null;
 
     if ($authorKey) {
-        $authorDetails = getWorkDetails("/authors/" . $authorKey); 
+        $authorDetails = getWorkDetails("/authors/" . $authorKey);
 
         $bio = $authorDetails['bio'] ?? 'No bio yet';
         if (is_array($bio)) {
@@ -178,7 +178,7 @@ if (empty($bookList)) {
         "Moby Dick",
         "Jane Eyre"
     ];
-    echo "⚠️ Using fallback list of classic books.\n";
+    echo " Using fallback list of classic books.\n";
 }
 
 foreach ($bookList as $title) {
@@ -222,5 +222,5 @@ foreach ($bookList as $title) {
     echo "  → Inserted book ID = $book_id (author: $authorName)\n";
 }
 
-echo "\n✅ Seeding complete.\n";
+echo "\n Seeding complete.\n";
 echo "</pre>";
