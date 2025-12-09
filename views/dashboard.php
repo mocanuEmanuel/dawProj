@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/header.php'; ?>
 
 <h2>Welcome, <?= htmlspecialchars($_SESSION['username']) ?>!</h2>
-<p style="color: #9ab;">Here are the popular books currently in the database.</p>
+<p style="color: #9ab;">Here are the books currently in the database.</p>
 
 <div class="dashboard-actions">
     <a href="/book/create" class="btn btn-primary">Add New Book</a>
@@ -33,7 +33,6 @@
 </div>
 
 <style>
-    /* Carousel specific styles that might not fit in theme.css yet, or move them later */
     .dashboard-actions { margin-bottom: 20px; }
     .carousel-container { position: relative; display: flex; align-items: center; }
     .carousel-track-wrapper { overflow: hidden; width: 100%; }

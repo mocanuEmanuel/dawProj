@@ -4,7 +4,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../app/Interfaces/LoggableInterface.php';
-require_once __DIR__ . '/../app/Exceptions/CustomException.php';
 require_once __DIR__ . '/../app/Helpers/CSRF.php';
 require_once __DIR__ . '/../app/Services/FileLogger.php';
 require_once __DIR__ . '/../app/Models/Model.php';

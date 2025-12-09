@@ -2,6 +2,10 @@
 namespace App\Controllers;
 
 use App\Models\Book;
+use App\Exceptions\ValidationException;
+use App\Exceptions\ResourceNotFoundException;
+use App\Interfaces\LoggableInterface;
+use App\Services\FileLogger;
 
 class BookController {
     public function index() {
@@ -26,8 +30,7 @@ class BookController {
         $book = $bookModel->getById($id);
 
         if (!$book) {
-            echo "Book not found";
-            return;
+            throw new ResourceNotFoundException("Book with ID $id not found");
         }
 
         $logModel = new \App\Models\Log();
@@ -58,38 +61,17 @@ class BookController {
         $authorName = $_POST['author'];
         $description = $_POST['description'];
         $year = $_POST['publication_year'];
-        
         // Basic validation
         if (empty($title) || empty($authorName)) {
-            // Handle error (redirect back with error?)
-            header("Location: /book/create");
-            exit;
-        }
-
-        $pdo = \App\Config\Database::getInstance()->getConnection();
-        
-        // Find or create author
-        $stmt = $pdo->prepare("SELECT id FROM authors WHERE name = :name");
-        $stmt->execute([':name' => $authorName]);
-        $author = $stmt->fetch();
-        
-        if ($author) {
-            $authorId = $author['id'];
-        } else {
-            $stmt = $pdo->prepare("INSERT INTO authors (name) VALUES (:name)");
-            $stmt->execute([':name' => $authorName]);
-            $authorId = $pdo->lastInsertId();
+            throw new ValidationException(['title' => 'Title is required', 'author' => 'Author is required']);
         }
 
         $bookModel = new Book();
-        
-        $stmt = $pdo->prepare("INSERT INTO books (title, author_id, description, publication_year) VALUES (:title, :author_id, :description, :year)");
-        $stmt->execute([
-            ':title' => $title,
-            ':author_id' => $authorId,
-            ':description' => $description,
-            ':year' => $year
-        ]);
+        $bookModel->create($title, $authorName, $description, $year);
+
+        // Log the action
+        $logger = new FileLogger();
+        $logger->log("Book created: '$title' by user ID " . $_SESSION['user_id']);
 
         header("Location: /dashboard");
         exit;
@@ -100,12 +82,9 @@ class BookController {
             header("Location: /login");
             exit;
         }
-
-        // In a real app, check if user is admin or owner. 
-        // For this demo, allow any logged in user to delete.
         
         $bookModel = new Book();
-        $bookModel->delete($id); // Assuming Model has delete
+        $bookModel->delete($id); 
 
         header("Location: /dashboard");
         exit;

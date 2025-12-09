@@ -3,12 +3,7 @@ namespace App\Models;
 
 use PDO;
 
-use App\Interfaces\LoggableInterface;
-
-class Log extends Model implements LoggableInterface {
-    public function log(string $message): void {
-        error_log("LOG MODEL: " . $message);
-    }
+class Log extends Model {
     public function createOrUpdate($userId, $bookId, $status) {
         // Check if exists
         $stmt = $this->pdo->prepare("SELECT id FROM logs WHERE user_id = :uid AND book_id = :bid");

@@ -4,7 +4,7 @@ body {
     min-height: 100vh;
 }
 
-/* Header and Footer visuals moved to theme.css */
+
 
 main {
     flex: 1;
@@ -14,7 +14,7 @@ main {
     width: 100%;
 }
 
-/* Utility classes for layout */
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

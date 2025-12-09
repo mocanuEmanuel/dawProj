@@ -29,4 +29,38 @@ class Book extends Model {
         $stmt = $this->pdo->prepare("DELETE FROM books WHERE id = :id");
         $stmt->execute([':id' => $id]);
     }
+
+    public function create($title, $authorName, $description, $year) {
+        try {
+            $this->pdo->beginTransaction();
+
+            // Find or create author
+            $stmt = $this->pdo->prepare("SELECT id FROM authors WHERE name = :name");
+            $stmt->execute([':name' => $authorName]);
+            $author = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($author) {
+                $authorId = $author['id'];
+            } else {
+                $stmt = $this->pdo->prepare("INSERT INTO authors (name) VALUES (:name)");
+                $stmt->execute([':name' => $authorName]);
+                $authorId = $this->pdo->lastInsertId();
+            }
+
+            // Insert book
+            $stmt = $this->pdo->prepare("INSERT INTO books (title, author_id, description, publication_year) VALUES (:title, :author_id, :description, :year)");
+            $stmt->execute([
+                ':title' => $title,
+                ':author_id' => $authorId,
+                ':description' => $description,
+                ':year' => $year
+            ]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
 }
